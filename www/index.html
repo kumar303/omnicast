@@ -8,19 +8,27 @@
     <title>OmniCast</title>
   </head>
   <body>
-    <div class="app">
-      <div id="connect">
-        <button id="join-channel">Join Channel</button>
-        <button id="new-channel">New Channel</button>
+    <div id="connect">
+      <div data-bind="visible: !connected()">
+        <button data-bind="click: joinChannel">Join Channel</button>
+        <button data-bind="click: newChannel">New Channel</button>
       </div>
-      <ul id="links" class="hidden">
-        <li>one</li>
-      </ul>
+      <div data-bind="visible: connected">
+        Share Channel: <input readonly type="text" data-bind="attr: {value: channelName}">
+        <button data-bind="click: disconnect">Disconnect</button>
+      </div>
     </div>
+    <form id="links" data-bind="submit: addItem, visible: enabled">
+      <input data-bind='value: itemToAdd, valueUpdate: "afterkeydown"'>
+      <button type="submit" data-bind="enable: itemToAdd().length > 0">Add</button>
+      <ul id="links" data-bind="foreach: items">
+        <li>
+          <a target="_blank" data-bind="text: link, attr: {href: link}"></a>
+        </li>
+      </ul>
+    </form>
     <script src='https://cdn.firebase.com/v0/firebase.js'></script>
+    <script type="text/javascript" src="js/lib/knockout-2.2.1.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript">
-      app.initialize();
-    </script>
   </body>
 </html>
