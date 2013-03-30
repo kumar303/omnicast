@@ -9,24 +9,36 @@
   </head>
   <body>
     <div id="connect">
-      <div data-bind="visible: !connected()">
-        <button data-bind="click: joinChannel">Join Channel</button>
-        <button data-bind="click: newChannel">New Channel</button>
+      <div data-bind="visible: showJoinControls">
+        <form data-bind="submit: joinSelectedChannel">
+          <input data-bind='value: channelToJoin, valueUpdate: "afterkeydown"'>
+          <button type="submit" data-bind="enable: channelToJoin().length > 0">Join</button>
+        </form>
+      </div>
+      <div data-bind="visible: !connected() && !showJoinControls()">
+        <form data-bind="submit: newChannel">
+          <button data-bind="click: enterJoinControls, enable: true">Join Channel</button>
+          <button type="submit" data-bind="enable: true">New Channel</button>
+        </form>
       </div>
       <div data-bind="visible: connected">
-        Share Channel: <input readonly type="text" data-bind="attr: {value: channelName}">
-        <button data-bind="click: disconnect">Disconnect</button>
+        <form data-bind="submit: disconnect">
+          Share Channel: <input readonly type="text" data-bind="attr: {value: channelName}">
+          <button type="submit" data-bind="enable: true">Disconnect</button>
+        </form>
       </div>
     </div>
-    <form id="links" data-bind="submit: addItem, visible: enabled">
-      <input data-bind='value: itemToAdd, valueUpdate: "afterkeydown"'>
-      <button type="submit" data-bind="enable: itemToAdd().length > 0">Add</button>
-      <ul id="links" data-bind="foreach: items">
+    <div id="data" data-bind="visible: enabled">
+      <form data-bind="submit: addItem">
+        <input data-bind='value: itemToAdd, valueUpdate: "afterkeydown"'>
+        <button type="submit" data-bind="enable: itemToAdd().length > 0">Add</button>
+      </form>
+      <ul data-bind="foreach: items">
         <li>
           <a target="_blank" data-bind="text: link, attr: {href: link}"></a>
         </li>
       </ul>
-    </form>
+    </div>
     <script src='https://cdn.firebase.com/v0/firebase.js'></script>
     <script type="text/javascript" src="js/lib/knockout-2.2.1.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
