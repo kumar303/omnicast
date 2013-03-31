@@ -22,7 +22,7 @@ function Data() {
   var self = this;
   // These are the characters you can easily type on Firefox OS
   // without using the shift/alt key. The characters must be valid Firebase keys.
-  this.chars = 'abcdefghijklmnopqrstuvwxyz_@'.split('');
+  this.chars = 'abcdefghijklmnopqrstuvwxyz'.split('');
   this.conn = new Firebase('https://omnicast.firebaseio.com/').child('v1');
   this.channels = this.conn.child('channels');
 
