@@ -4,6 +4,11 @@
  "developer": {"name": "Kumar McMillan",
                "url": "http://farmdev.com/"},
  "launch_path": "/omnicast/index.html",
- "icons": {},
+ "icons": {
+     "128": "/omnicast/img/icons/icon_128.png",
+     "64": "/omnicast/img/icons/icon_64.png",
+     "48": "/omnicast/img/icons/icon_48.png",
+     "32": "/omnicast/img/icons/icon_32.png"
+  },
  "default_locale":"en",
  "installs_allowed_from": ["*"]}
