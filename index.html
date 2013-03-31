@@ -11,6 +11,7 @@
     <div id="app">
       <header>
         <h1 id="brand"><a target="_blank" href="https://github.com/kumar303/omnicast/">OmniCast</a></h1>
+        <!-- ko with: connect -->
         <div id="connect">
           <div data-bind="visible: showJoinControls">
             <form data-bind="submit: joinSelectedChannel">
@@ -31,8 +32,10 @@
             </form>
           </div>
         </div>
+        <!-- /ko -->
         <div class="clear"></div>
       </header>
+      <!-- ko with: data -->
       <div id="data" data-bind="visible: enabled">
         <form data-bind="submit: addItem">
           <input data-bind='value: itemToAdd, valueUpdate: "afterkeydown"'>
@@ -44,6 +47,7 @@
           </li>
         </ul>
       </div>
+      <!-- /ko -->
     </div>
     <script src='https://cdn.firebase.com/v0/firebase.js'></script>
     <script type="text/javascript" src="js/lib/knockout-2.2.1.js"></script>
