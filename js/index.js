@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function _onLoad() {
   var chars = 'abcdefghijklmnopqrstuvwxyz_@'.split('');
 
   function Data() {
-    this.conn = new Firebase('https://omnicast.firebaseio.com/');
+    this.conn = new Firebase('https://omnicast.firebaseio.com/').child('v1');
     this.channels = this.conn.child('channels');
 
     this.itemToAdd = ko.observable("");
