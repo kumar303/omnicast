@@ -14,7 +14,7 @@
         <div id="connect">
           <div data-bind="visible: showJoinControls">
             <form data-bind="submit: joinSelectedChannel">
-              <input data-bind='value: channelToJoin, valueUpdate: "afterkeydown"'>
+              <input data-bind='hasfocus: showJoinControls() == true, value: channelToJoin, valueUpdate: "afterkeydown"'>
               <button type="submit" data-bind="enable: channelToJoin().length > 0">Join</button>
             </form>
           </div>
@@ -35,7 +35,7 @@
       </header>
       <div id="data" data-bind="visible: enabled">
         <form data-bind="submit: addItem">
-          <input data-bind='value: itemToAdd, valueUpdate: "afterkeydown"'>
+          <input data-bind='hasfocus: enabled() == true, value: itemToAdd, valueUpdate: "afterkeydown"'>
           <button type="submit" data-bind="enable: itemToAdd().length > 0">Add URL</button>
         </form>
         <ul id="items" data-bind="foreach: items">
