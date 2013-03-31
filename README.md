@@ -22,6 +22,8 @@ to install the app from Github pages.
 To simulate serving static content from Github pages
 you can run a simple NodeJS server:
 
+    git clone https://github.com/kumar303/omnicast.git
+    cd omnicast
     npm install
     npm start
 
@@ -33,3 +35,8 @@ or [launch it](http://0.0.0.0:3000/omnicast/) from your local web server.
 To deploy the code to Github Pages run this:
 
     volo build && volo ghdeploy
+
+## Wait, What?
+
+Yep! This app is totally static HTML5. It uses
+[Firebase](https://www.firebase.com/) for realtime/sync magic.
