@@ -1,4 +1,28 @@
+var events = {
+  _target: null,
+  trigger: function _eventsTrigger(name, opt) {
+    if (!this._target) this.makeTarget();
+    var init = opt ? {detail: opt} : null;
+    var event = new CustomEvent(name, init);
+    this._target.dispatchEvent(event);
+  },
+  on: function _eventsOn(name, handler) {
+    if (!this._target) this.makeTarget();
+    this._target.addEventListener(name, handler);
+  },
+  makeTarget: function _eventsMakeTarget() {
+    // Make an orphaned element to stop any unecessary bubbling work.
+    this._target = document.createElement('div');
+    this._target.attributes.id = 'omni_events_dispatch';
+  }
+};
+
+
 function Data() {
+  var self = this;
+  // These are the characters you can easily type on Firefox OS
+  // without using the shift/alt key. The characters must be valid Firebase keys.
+  this.chars = 'abcdefghijklmnopqrstuvwxyz_@'.split('');
   this.conn = new Firebase('https://omnicast.firebaseio.com/').child('v1');
   this.channels = this.conn.child('channels');
 
@@ -8,6 +32,17 @@ function Data() {
   this.channel = null;
   this.refStack = [];
   this.maxLength = 10;  // only store this number of items
+
+  events.on('disconnect', function _onDisconnect() {
+    console.log('data.disconnect');
+    self.enabled(false);
+  });
+
+  events.on('findNewChannel', self.findNewChannel.bind(self));
+
+  events.on('joinChannel', function _onJoinChannel(evt) {
+    self.joinChannel(evt.detail.channelName);
+  });
 }
 
 Data.prototype.addItem = function _addItem() {
@@ -20,9 +55,27 @@ Data.prototype.addItem = function _addItem() {
   this.itemToAdd('');
 };
 
+Data.prototype.findNewChannel = function _findNewChannel() {
+  // TODO: make some timeout here and up the string length.
+  var self = this;
+  var name = '';
+  for (var i=0; i < 5; i++) {
+    name += this.chars[Math.floor(Math.random() * this.chars.length)];
+  }
+  console.log('data.findNewChannel', name);
+  this.channels.child(name).once('value', function _onValue(snapshot) {
+    if (!snapshot.val()) {
+      // We found an open channel; join it.
+      events.trigger('joinChannel', {channelName: name});
+    } else {
+      setTimeout(self.findNewChannel.bind(self), 100);
+    }
+  });
+};
+
 Data.prototype.joinChannel = function _joinChannel(name) {
   var self = this;
-  console.log('joining channel', name);
+  console.log('data.joinChannel', name);
   if (this.channel) {
     delete this.refStack;
     this.refStack = [];
@@ -31,7 +84,7 @@ Data.prototype.joinChannel = function _joinChannel(name) {
   }
   this.channel = this.channels.child(name);
   this.channel.on('child_added', function(snapshot) {
-    console.log('child_added', snapshot.val());
+    console.log('data.child_added', snapshot.val());
     self.items.unshift(snapshot.val());
     self.refStack.unshift(snapshot.ref());
     self.cleanUpStack();
@@ -41,52 +94,43 @@ Data.prototype.joinChannel = function _joinChannel(name) {
 
 Data.prototype.cleanUpStack = function _cleanUpStack() {
   if (this.refStack.length > this.maxLength) {
-    console.log('cleaning up ref stack');
+    console.log('data.cleanUpStack');
     this.refStack.pop().remove();
     this.items.pop();
   }
 }
 
 
-function Connect(data) {
-  // These are the characters you can easily type on Firefox OS
-  // without using the shift/alt key. The characters must be valid Firebase keys.
-  this.chars = 'abcdefghijklmnopqrstuvwxyz_@'.split('');
-  this.data = data;
+function Connect() {
+  var self = this;
   this.connected = ko.observable(false);
   this.showJoinControls = ko.observable(false);
   this.channelToJoin = ko.observable('')
   this.channelName = ko.observable('')
-  //window.localStorage.setItem('channel', '');
+
+  events.on('joinChannel', function _onJoinChannel(evt) {
+    var name = evt.detail.channelName;
+    console.log('connect.joinChannel', name);
+    self.showJoinControls(false);
+    self.connected(true);
+    self.channelName(name);
+    window.localStorage.setItem('channel', name);
+  });
 
   var channel = window.localStorage.getItem('channel');
   if (channel) {
-    this.joinChannel(channel);
+    events.trigger('joinChannel', {channelName: channel});
   }
 }
 
 Connect.prototype.disconnect = function _disconnect() {
   this.channelName('');
   this.connected(false);
-  this.data.enabled(false);
+  events.trigger('disconnect');
 }
 
 Connect.prototype.newChannel = function _newChannel(ctx, event) {
-  // TODO: make some timeout here and up the string length.
-  var self = this;
-  var name = '';
-  for (var i=0; i < 5; i++) {
-    name += this.chars[Math.floor(Math.random() * this.chars.length)];
-  }
-  console.log('trying to connect to', name);
-  this.data.channels.child(name).once('value', function _onValue(snapshot) {
-    if (!snapshot.val()) {
-      // We found an open channel; join it.
-      self.joinChannel(name);
-    } else {
-      setTimeout(self.newChannel.bind(self), 100);
-    }
-  });
+  events.trigger('findNewChannel');
 }
 
 Connect.prototype.enterJoinControls = function _enterJoinControls() {
@@ -96,23 +140,14 @@ Connect.prototype.enterJoinControls = function _enterJoinControls() {
 Connect.prototype.joinSelectedChannel = function _joinSelectedChannel() {
   var name = this.channelToJoin();
   this.channelToJoin('');
-  this.joinChannel(name);
-};
-
-Connect.prototype.joinChannel = function _joinChannel(name) {
-  this.showJoinControls(false);
-  this.connected(true);
-  this.channelName(name);
-  window.localStorage.setItem('channel', name);
-  this.data.joinChannel(name);
+  events.trigger('joinChannel', {channelName: name});
 };
 
 
 document.addEventListener('DOMContentLoaded', function _onLoad() {
-  var data = new Data();
   var viewModel = {
-    data: data,
-    connect: new Connect(data)
+    data: new Data(),
+    connect: new Connect()
   };
   ko.applyBindings(viewModel);
 });
