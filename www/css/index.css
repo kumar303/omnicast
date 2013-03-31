@@ -29,40 +29,123 @@ time, mark, audio, video {
 }
 
 body {
-    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color:#E4E4E4;
-    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0, #A7A7A7),
-        color-stop(0.51, #E4E4E4)
-    );
-    background-attachment:fixed;
-    font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
-    margin:0px;
-    padding:10px;
-    font-size: 3em;
-    text-transform:uppercase;
-    text-align:center;
+    background-color: #E4E4E4;
+    margin: 0px;
+    text-align: center;
+    font-size: 2em;
+}
+
+@font-face {
+    font-family: 'Walkway';
+    src: url('fonts/Walkway_SemiBold.ttf') format('truetype');
+}
+
+body, * {
+    font-family: 'Walkway', Helvetica;
+}
+
+a {
+    color: #121007;
+    text-decoration: none;
+}
+
+ul li {
+    list-style: none;
+    border-bottom: 1px solid #E4E4E4;
+}
+
+ul li a {
+    display: block;
+    padding: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+input, button, h1#brand {
+    font-size: 0.8em;
+    padding: 0.2em;
 }
 
 button {
-    border-radius:10px;
-    -webkit-border-radius:10px;
-    margin: auto;
-    padding: 0.5em;
-}
-
-/* Landscape layout (with min-width) */
-@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
+    text-align: center;
+    text-shadow: 0pt 1px 1px rgba(255, 255, 255, 0.75);
+    background-color: rgb(245, 245, 245);
+    background-image: -moz-linear-gradient(center top , rgb(255, 255, 255), rgb(230, 230, 230));
+    box-shadow: 0pt 1px 0pt rgba(255, 255, 255, 0.2) inset, 0pt 1px 2px rgba(0, 0, 0, 0.05);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(179, 179, 179);
+    border-radius: 6px 6px 6px 6px;
+    cursor: pointer;
 }
 
 .hidden {
     display: none;
+}
+
+.clear {
+    clear: both;
+}
+
+#app {
+    margin: 0 15%;
+    padding: 10px 10px 1em 10px;
+    background-color: #fff;
+}
+
+header {
+    font-size: 0.6em;
+}
+
+h1#brand {
+    font-size: 1em;
+    width: 25%;
+    text-align: left;
+    float: left;
+}
+
+#connect {
+    width: 70%;
+    margin-bottom: 1em;
+    float: right;
+    text-align: right;
+}
+
+#connect form input {
+    width: 4em;
+    font-family: monospace;
+}
+
+#items {
+    margin-top: 0.5em;
+}
+
+#data form input {
+    width: 80%;
+}
+#data form button {
+    width: 15%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* portrait tablet */
+@media (max-width: 768px) {
+    header {
+        font-size: 0.5em;
+    }
+    #data form input {
+        width: 60%;
+    }
+    #data form button {
+        width: 30%;
+    }
+    body {
+        background-color: #fff;
+    }
+    #app {
+        margin: 0px;
+    }
 }
