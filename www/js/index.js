@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function _onLoad() {
       name += chars[Math.floor(Math.random() * chars.length)];
     }
     console.log('trying to connect to', name);
-    this.data.channels.child(name).on('value', function _onValue(snapshot) {
+    this.data.channels.child(name).once('value', function _onValue(snapshot) {
       if (!snapshot.val()) {
         // We found an open channel; join it.
         self.joinChannel(name);
