@@ -45,7 +45,7 @@ body, * {
     font-family: 'Walkway', Helvetica;
 }
 
-a {
+a, button {
     color: #121007;
     text-decoration: none;
 }
