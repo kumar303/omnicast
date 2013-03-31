@@ -13,13 +13,13 @@ the link from your Firefox OS device to install an app.
 
 Install the [manifest](http://kumar303.github.com/omnicast/manifest.webapp)
 or [launch it](http://kumar303.github.com/omnicast/)
-from Git Hub Pages.
+from Github Pages.
 Here is a [shortcut](http://app-loader.appspot.com/44338)
-to install the app from Git Hub pages.
+to install the app from Github pages.
 
 ## Hack on it
 
-To simulate serving static content from Git Hub pages
+To simulate serving static content from Github pages
 you can run a simple NodeJS server:
 
     npm install
@@ -27,3 +27,10 @@ you can run a simple NodeJS server:
 
 Install the [manifest](http://0.0.0.0:3000/omnicast/manifest.webapp)
 or [launch it](http://0.0.0.0:3000/omnicast/) from your local web server.
+
+## Deploy to Github Pages
+
+To deploy the code to Github Pages run this:
+
+    volo build
+    volo ghdeploy
