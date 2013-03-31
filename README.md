@@ -32,5 +32,4 @@ or [launch it](http://0.0.0.0:3000/omnicast/) from your local web server.
 
 To deploy the code to Github Pages run this:
 
-    volo build
-    volo ghdeploy
+    volo build && volo ghdeploy
