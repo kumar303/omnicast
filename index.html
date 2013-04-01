@@ -8,7 +8,7 @@
     <title>OmniCast</title>
   </head>
   <body>
-    <div id="app">
+    <div id="app" class="hidden">
       <header>
         <h1 id="brand"><a target="_blank" href="https://github.com/kumar303/omnicast/">OmniCast</a></h1>
         <!-- ko with: connect -->
@@ -48,6 +48,9 @@
         </ul>
       </div>
       <!-- /ko -->
+    </div>
+    <div id="loader">
+      <div class="spinner"></div>
     </div>
     <script src='https://cdn.firebase.com/v0/firebase.js'></script>
     <script type="text/javascript" src="js/lib/knockout-2.2.1.js"></script>

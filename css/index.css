@@ -95,6 +95,38 @@ button {
     background-color: #fff;
 }
 
+#loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+
+#loader .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: url(../img/loader.png) no-repeat center center;
+    animation: 0.9s rotate infinite linear;
+    width: 64px;
+    height: 64px;
+    margin-top: -32px; /* Half the height */
+    margin-left: -32px; /* Half the width */
+    border: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(1deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 header {
     font-size: 0.6em;
 }

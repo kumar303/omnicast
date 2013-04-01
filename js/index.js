@@ -20,6 +20,7 @@ var events = {
 
 function Data() {
   var self = this;
+  this.viewName = 'data';
   // These are the characters you can easily type on Firefox OS
   // without using the shift/alt key. The characters must be valid Firebase keys.
   this.chars = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -29,6 +30,11 @@ function Data() {
   this.itemToAdd = ko.observable("");
   this.enabled = ko.observable(false);
   this.items = ko.observableArray();
+  this.whenEnabled = ko.computed(function _whenEnabled() {
+    if (self.enabled()) {
+      events.trigger('viewEnabled', {viewName: self.viewName});
+    }
+  });
   this.channel = null;
   this.refStack = [];
   this.maxLength = 10;  // only store this number of items
@@ -103,6 +109,7 @@ Data.prototype.cleanUpStack = function _cleanUpStack() {
 
 function Connect() {
   var self = this;
+  this.viewName = 'connect';
   this.connected = ko.observable(false);
   this.showJoinControls = ko.observable(false);
   this.channelToJoin = ko.observable('')
@@ -115,6 +122,13 @@ function Connect() {
     self.connected(true);
     self.channelName(name);
     window.localStorage.setItem('channel', name);
+  });
+
+  this.whenEnabled = ko.computed(function _whenEnabled() {
+    if (!self.connected()) {
+      // Not connected to a channel but the view is ready.
+      events.trigger('viewEnabled', {viewName: self.viewName});
+    }
   });
 
   var channel = window.localStorage.getItem('channel');
@@ -144,8 +158,26 @@ Connect.prototype.joinSelectedChannel = function _joinSelectedChannel() {
 };
 
 
+function Loader() {
+  var self = this;
+  this._loaded = false;
+
+  events.on('viewEnabled', function _onEnabled(evt) {
+    console.log('view enabled:', evt.detail.viewName);
+    if (!self._loaded) {
+      console.log('removing loader');
+      document.querySelector('#app').className = '';
+      document.querySelector('#loader').className = 'hidden';
+      self._loaded = true;
+    }
+  });
+
+}
+
+
 document.addEventListener('DOMContentLoaded', function _onLoad() {
   var viewModel = {
+    loader: new Loader(),  // must instantiate first.
     data: new Data(),
     connect: new Connect()
   };
