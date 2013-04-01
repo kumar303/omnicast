@@ -30,11 +30,6 @@ function Data() {
   this.itemToAdd = ko.observable("");
   this.enabled = ko.observable(false);
   this.items = ko.observableArray();
-  this.whenEnabled = ko.computed(function _whenEnabled() {
-    if (self.enabled()) {
-      events.trigger('viewEnabled', {viewName: self.viewName});
-    }
-  });
   this.channel = null;
   this.refStack = [];
   this.maxLength = 10;  // only store this number of items
@@ -48,6 +43,15 @@ function Data() {
 
   events.on('joinChannel', function _onJoinChannel(evt) {
     self.joinChannel(evt.detail.channelName);
+  });
+}
+
+Data.prototype.wakeUp = function _wakeUp() {
+  var self = this;
+  ko.computed(function _whenEnabled() {
+    if (self.enabled()) {
+      events.trigger('viewEnabled', {viewName: self.viewName});
+    }
   });
 }
 
@@ -123,14 +127,18 @@ function Connect() {
     self.channelName(name);
     window.localStorage.setItem('channel', name);
   });
+}
 
-  this.whenEnabled = ko.computed(function _whenEnabled() {
+Connect.prototype.wakeUp = function _wakeUp() {
+  var self = this;
+  ko.computed(function _whenEnabled() {
     if (!self.connected()) {
       // Not connected to a channel but the view is ready.
       events.trigger('viewEnabled', {viewName: self.viewName});
     }
   });
 
+  //window.localStorage.setItem('channel', '');
   var channel = window.localStorage.getItem('channel');
   if (channel) {
     events.trigger('joinChannel', {channelName: channel});
@@ -171,15 +179,21 @@ function Loader() {
       self._loaded = true;
     }
   });
-
 }
+
+Loader.prototype.wakeUp = function _wakeUp() {}
 
 
 document.addEventListener('DOMContentLoaded', function _onLoad() {
   var viewModel = {
-    loader: new Loader(),  // must instantiate first.
     data: new Data(),
-    connect: new Connect()
+    connect: new Connect(),
+    loader: new Loader()
   };
+  for (var attr in viewModel) {
+    // This is a hook for views to trigger events after everyone else
+    // is listening.
+    viewModel[attr].wakeUp();
+  }
   ko.applyBindings(viewModel);
 });

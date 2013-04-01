@@ -133,13 +133,13 @@ header {
 
 h1#brand {
     font-size: 1em;
-    width: 25%;
+    width: 20%;
     text-align: left;
     float: left;
 }
 
 #connect {
-    width: 70%;
+    width: 75%;
     margin-bottom: 1em;
     float: right;
     text-align: right;
@@ -167,7 +167,7 @@ h1#brand {
 /* portrait tablet */
 @media (max-width: 768px) {
     header {
-        font-size: 0.5em;
+        font-size: 0.55em;
     }
     #data form input {
         width: 60%;
