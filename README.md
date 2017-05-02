@@ -1,5 +1,7 @@
 # OmniCast
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kumar303/omnicast.svg)](https://greenkeeper.io/)
+
 A web app for [Firefox OS](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS)
 that lets you share data between devices.
 
